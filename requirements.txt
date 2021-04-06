@@ -1,5 +1,6 @@
 numpy>=1.11.3
 scipy>=0.19.1
-matplotlib==2.0.0
+matplotlib
 torchvision==0.1.9
+pytorch
 tqdm
