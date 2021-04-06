@@ -6,8 +6,6 @@ else
     total_size="$(($num_categories * 2))"
 
     while true; do
-        read -p "Download "${num_categories}" datasets? ("${total_size}" GB)`echo $'\n> '`" yn
-        
         case $yn in
             [Yy]* ) 
                 for category in "$@"
