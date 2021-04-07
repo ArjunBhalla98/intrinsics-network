@@ -3,5 +3,6 @@ pillow
 scipy>=0.19.1
 matplotlib
 torchvision==0.1.9
-pytorch
+imageio
+torch
 tqdm

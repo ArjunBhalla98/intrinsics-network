@@ -1,4 +1,5 @@
 import os, torch, torch.utils.data, scipy.misc, numpy as np, pdb
+import imageio
 from .utils import *
 
 """
@@ -133,7 +134,7 @@ class IntrinsicDataset(torch.utils.data.Dataset):
 
     ## read image as C x M x N array in range [0, 1]
     def __read_image(self, path):
-        img = scipy.misc.imread(path)
+        img = imageio.imread(path)
         if img.shape[-1] == 4:
             img = img[:, :, :-1]
         img = img.transpose(2, 0, 1) / 255.0
