@@ -49,7 +49,9 @@ def decode(encoder, decoder, upsampler):
 def normalize(normals):
     magnitude = torch.pow(normals, 2).sum(1)
     # magnitude = magnitude.sqrt().repeat(1,3,1,1)
+    print(normals.shape)
     magnitude = magnitude.sqrt().repeat(1, normals.size(1), 1, 1)
+    print(magnitude.shape)
     normed = normals / (magnitude + 1e-6)
 
     # magnitude = torch.norm(normals, p=2, dim=1)
