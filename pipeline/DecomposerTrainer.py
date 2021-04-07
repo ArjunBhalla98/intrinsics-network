@@ -23,7 +23,7 @@ class DecomposerTrainer:
             inp, mask, refl_targ, depth_targ, shape_targ, lights_targ = tensors
             self.optimizer.zero_grad()
             refl_pred, depth_pred, shape_pred, lights_pred = self.model.forward(
-                inp, mask
+                inp, mask, keepdim=True
             )
             refl_loss = self.criterion(refl_pred, refl_targ)
             depth_loss = self.criterion(depth_pred, depth_targ)
@@ -35,15 +35,20 @@ class DecomposerTrainer:
             loss.backward()
             self.optimizer.step()
 
-            losses.update([l.data[0] for l in [refl_loss, shape_loss, lights_loss]])
+            # losses.update([l.data[0] for l in [refl_loss, shape_loss, lights_loss]])
+            losses.update([l.item() for l in [refl_loss, shape_loss, lights_loss]])
             progress.update(self.loader.batch_size)
             progress.set_description(
                 "%.5f | %.5f | %.5f | %.3f"
                 % (
-                    refl_loss.data[0],
-                    depth_loss.data[0],
-                    shape_loss.data[0],
-                    lights_loss.data[0],
+                    # refl_loss.data[0],
+                    # depth_loss.data[0],
+                    # shape_loss.data[0],
+                    # lights_loss.data[0],
+                    refl_loss.item(),
+                    depth_loss.item(),
+                    shape_loss.item(),
+                    lights_loss.item(),
                 )
             )
         print("<Train> Losses: ", losses.avgs)
