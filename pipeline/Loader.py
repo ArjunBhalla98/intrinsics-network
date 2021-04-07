@@ -1,4 +1,4 @@
-import os, torch, torch.utils.data, scipy.misc, numpy as np, pdb
+import os, torch, torch.utils.data, imageio, numpy as np, pdb
 import imageio
 from .utils import *
 

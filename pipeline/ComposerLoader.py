@@ -1,4 +1,4 @@
-import os, torch, torch.utils.data, scipy.misc, numpy as np, pdb
+import os, torch, torch.utils.data, imageio, numpy as np, pdb
 from .utils import *
 
 
@@ -141,7 +141,7 @@ class ComposerDataset(torch.utils.data.Dataset):
 
     ## read image as C x M x N array in range [0, 1]
     def __read_image(self, path):
-        img = scipy.misc.imread(path)[:, :, :-1].transpose(2, 0, 1) / 255.0
+        img = imageio.imread(path)[:, :, :-1].transpose(2, 0, 1) / 255.0
         return img
 
     def __read_data_files(self, data_files, selections, idx):

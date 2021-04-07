@@ -106,12 +106,12 @@ def colormap(img):
 if __name__ == "__main__":
 
     def read_img(path):
-        img = scipy.misc.imread(path)[:, :, :-1].transpose(2, 0, 1) / 255.0
+        img = imageio.imread(path)[:, :, :-1].transpose(2, 0, 1) / 255.0
         img = torch.Tensor(img)[0].unsqueeze(0)
         return img
 
     # img = torch.randn(10,256,256)
-    import scipy.misc
+    import imageio
 
     d1 = 1 - read_img("test_images/356_depth.png")
     d2 = 2 - read_img("test_images/401_depth.png")
@@ -126,8 +126,8 @@ if __name__ == "__main__":
         print(original.shape)
         colored = cimg[ind].numpy().transpose(1, 2, 0)
         print(colored.shape)
-        scipy.misc.imsave("test_images/original_" + str(ind) + ".png", original)
-        scipy.misc.imsave("test_images/colored_" + str(ind) + ".png", colored)
+        imageio.imsave("test_images/original_" + str(ind) + ".png", original)
+        imageio.imsave("test_images/colored_" + str(ind) + ".png", colored)
 #     # c = 3
 # -- converts a gresycale image
 # -- to RGB based on current

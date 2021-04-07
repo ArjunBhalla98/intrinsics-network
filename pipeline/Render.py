@@ -1,4 +1,4 @@
-import os, shutil, subprocess, numpy as np, scipy.misc, torch
+import os, shutil, subprocess, numpy as np, imageio, torch
 from torch.autograd import Variable
 
 
@@ -52,12 +52,12 @@ class Render:
         subprocess.call(command, stdout=stdout)
 
     def __read_images(self, load_path, num_lights):
-        img = scipy.misc.imread(os.path.join(load_path, "0.png"))
+        img = imageio.imread(os.path.join(load_path, "0.png"))
         M, N, C = img.shape
         images = np.zeros((num_lights, M, N, C))
 
         for ind in range(num_lights):
-            img = scipy.misc.imread(os.path.join(load_path, str(ind) + ".png")) / 255.0
+            img = imageio.imread(os.path.join(load_path, str(ind) + ".png")) / 255.0
             images[ind] = img
 
         return images

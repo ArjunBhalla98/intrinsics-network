@@ -40,10 +40,10 @@ def depth_to_normals(depth, mask=None):
 
 
 if __name__ == "__main__":
-    import scipy.misc
+    import imageio
 
     def read_img(path):
-        img = scipy.misc.imread(path)[:, :, :-1].transpose(2, 0, 1) / 255.0
+        img = imageio.imread(path)[:, :, :-1].transpose(2, 0, 1) / 255.0
         return img
 
     img = read_img("test_images/356_depth.png")[0]
@@ -67,11 +67,11 @@ if __name__ == "__main__":
     norm1 = norm1.data.numpy()
     norm1 = norm1.transpose(1, 2, 0)
     print(norm1.shape)
-    scipy.misc.imsave("test_images/356_approx_normals.png", norm1)
+    imageio.imsave("test_images/356_approx_normals.png", norm1)
 
     norm2 = norm2.data.numpy()
     norm2 = norm2.transpose(1, 2, 0)
     print(norm2.shape)
-    scipy.misc.imsave("test_images/5502_approx_normals.png", norm2)
+    imageio.imsave("test_images/5502_approx_normals.png", norm2)
     # inp = Variable( torch.randn(3,5,5) )
     # weight = Parameter( torch.randn(3,3) )

@@ -1,4 +1,4 @@
-import os, math, torch, torch.nn as nn, torchvision.utils, numpy as np, scipy.misc, pdb
+import os, math, torch, torch.nn as nn, torchvision.utils, numpy as np, imageio, pdb
 from torch.autograd import Variable
 from tqdm import tqdm
 import pipeline
@@ -46,9 +46,7 @@ def visualize_shader(model, loader, save_path, save_raw=False):
         for ind, img in enumerate(images):
             img = img.cpu().numpy().transpose(1, 2, 0)
             img = np.clip(img, 0, 1)
-            scipy.misc.imsave(
-                os.path.join(save_path, "shader_" + str(ind) + ".png"), img
-            )
+            imageio.imsave(os.path.join(save_path, "shader_" + str(ind) + ".png"), img)
     else:
         grid = (
             torchvision.utils.make_grid(images, nrow=3, padding=0)
@@ -57,7 +55,7 @@ def visualize_shader(model, loader, save_path, save_raw=False):
             .transpose(1, 2, 0)
         )
         grid = np.clip(grid, 0, 1)
-        scipy.misc.imsave(save_path, grid)
+        imageio.imsave(save_path, grid)
         # torchvision.utils.save_image(grid, os.path.join(save_path, 'shader.png'))
         return grid
 
@@ -107,9 +105,7 @@ def visualize_relit_shader(model, loader, save_path, params, save_raw=False):
         for ind, img in enumerate(images):
             img = img.cpu().numpy().transpose(1, 2, 0)
             img = np.clip(img, 0, 1)
-            scipy.misc.imsave(
-                os.path.join(save_path, "relit_" + str(ind) + ".png"), img
-            )
+            imageio.imsave(os.path.join(save_path, "relit_" + str(ind) + ".png"), img)
     else:
         grid = (
             torchvision.utils.make_grid(images, nrow=3, padding=0)
@@ -118,7 +114,7 @@ def visualize_relit_shader(model, loader, save_path, params, save_raw=False):
             .transpose(1, 2, 0)
         )
         grid = np.clip(grid, 0, 1)
-        scipy.misc.imsave(save_path, grid)
+        imageio.imsave(save_path, grid)
         # torchvision.utils.save_image(grid, os.path.join(save_path, 'shader.png'))
         return grid
 
@@ -184,7 +180,7 @@ def visualize_decomposer(model, loader, save_path, epoch, save_raw=False):
     else:
         fullpath = os.path.join(save_path, "trained.png")
 
-    # scipy.misc.imsave(fullpath, grid)
+    # imageio.imsave(fullpath, grid)
 
     losses = [refl_loss, shape_loss, lights_loss]
     print("<Val> Losses: ", losses)
@@ -278,7 +274,7 @@ def visualize_decomposer_full(model, loader, save_path):
     # pdb.set_trace()
     grid = torchvision.utils.make_grid(images, nrow=7).cpu().numpy().transpose(1, 2, 0)
     grid = np.clip(grid, 0, 1)
-    scipy.misc.imsave(os.path.join(save_path, "grid.png"), grid)
+    imageio.imsave(os.path.join(save_path, "grid.png"), grid)
     # torchvision.utils.save_image(grid, os.path.join(save_path, 'shader.png'))
     return grid
 
@@ -424,7 +420,7 @@ def visualize_composer(model, loader, save_path, epoch, raw=False):
     grid = torchvision.utils.make_grid(images, nrow=7).cpu().numpy().transpose(1, 2, 0)
     grid = np.clip(grid, 0, 1)
     # fullpath = os.path.join(save_path, str(epoch) + '.png')
-    scipy.misc.imsave(grid_path, grid)
+    imageio.imsave(grid_path, grid)
     # torchvision.utils.save_image(grid, os.path.join(save_path, 'shader.png'))
     return [
         recon_loss,
@@ -578,7 +574,7 @@ def visualize_composer_alt(model, loader, save_path, epoch, raw=False):
     grid = torchvision.utils.make_grid(images, nrow=7).cpu().numpy().transpose(1, 2, 0)
     grid = np.clip(grid, 0, 1)
     fullpath = os.path.join(save_path, str(epoch) + ".png")
-    scipy.misc.imsave(fullpath, grid)
+    imageio.imsave(fullpath, grid)
     # torchvision.utils.save_image(grid, os.path.join(save_path, 'shader.png'))
     return [
         recon_loss,
@@ -611,4 +607,4 @@ def save_raw(images, masks, labels, save_path):
         #     alpha = img
         # pdb.set_trace()
         fullpath = os.path.join(save_path, str(img_num) + "_" + lab + ".png")
-        scipy.misc.imsave(fullpath, alpha)
+        imageio.imsave(fullpath, alpha)
