@@ -141,9 +141,12 @@ def visualize_decomposer(model, loader, save_path, epoch, save_raw=False):
 
         refl_pred, depth_pred, shape_pred, lights_pred = model.forward(inp, mask)
 
-        refl_loss += criterion(refl_pred, refl_targ).data[0]
-        shape_loss += criterion(shape_pred, shape_targ).data[0]
-        lights_loss += criterion(lights_pred, lights_targ).data[0]
+        # refl_loss += criterion(refl_pred, refl_targ).data[0]
+        # shape_loss += criterion(shape_pred, shape_targ).data[0]
+        # lights_loss += criterion(lights_pred, lights_targ).data[0]
+        refl_loss += criterion(refl_pred, refl_targ).item()
+        shape_loss += criterion(shape_pred, shape_targ).item()
+        lights_loss += criterion(lights_pred, lights_targ).item()
 
         shape_targ = pipeline.vector_to_image(shape_targ)
         shape_pred = pipeline.vector_to_image(shape_pred)
@@ -211,9 +214,12 @@ def visualize_decomposer_full(model, loader, save_path):
 
         refl_pred, depth_pred, shape_pred, lights_pred = model.forward(inp, mask)
 
-        refl_loss += criterion(refl_pred, refl_targ).data[0]
-        shape_loss += criterion(shape_pred, shape_targ).data[0]
-        lights_loss += criterion(lights_pred, lights_targ).data[0]
+        # refl_loss += criterion(refl_pred, refl_targ).data[0]
+        # shape_loss += criterion(shape_pred, shape_targ).data[0]
+        # lights_loss += criterion(lights_pred, lights_targ).data[0]
+        refl_loss += criterion(refl_pred, refl_targ).item()
+        shape_loss += criterion(shape_pred, shape_targ).item()
+        lights_loss += criterion(lights_pred, lights_targ).item()
 
         shad_targ = shad_targ.unsqueeze(1).repeat(1, 3, 1, 1)
 
@@ -322,12 +328,18 @@ def visualize_composer(model, loader, save_path, epoch, raw=False):
         depth_pred = depth_pred.repeat(1, 3, 1, 1)
         shad_pred = shad_pred.repeat(1, 3, 1, 1)
 
-        recon_loss += criterion(recon, inp).data[0]
-        refl_loss += criterion(refl_pred, refl_targ).data[0]
-        depth_loss += criterion(depth_pred, depth_targ).data[0]
-        shape_loss += criterion(shape_pred, shape_targ).data[0]
-        lights_loss += criterion(lights_pred, lights_targ).data[0]
-        shad_loss += criterion(shad_pred, shad_targ).data[0]
+        # recon_loss += criterion(recon, inp).data[0]
+        # refl_loss += criterion(refl_pred, refl_targ).data[0]
+        # depth_loss += criterion(depth_pred, depth_targ).data[0]
+        # shape_loss += criterion(shape_pred, shape_targ).data[0]
+        # lights_loss += criterion(lights_pred, lights_targ).data[0]
+        # shad_loss += criterion(shad_pred, shad_targ).data[0]
+        recon_loss += criterion(recon, inp).item()
+        refl_loss += criterion(refl_pred, refl_targ).item()
+        depth_loss += criterion(depth_pred, depth_targ).item()
+        shape_loss += criterion(shape_pred, shape_targ).item()
+        lights_loss += criterion(lights_pred, lights_targ).item()
+        shad_loss += criterion(shad_pred, shad_targ).item()
         depth_normals_loss += lights_pred[
             :, 1
         ].sum()  ##criterion(shape_pred, depth_normals_pred.detach()).data[0]
@@ -413,7 +425,8 @@ def visualize_composer(model, loader, save_path, epoch, raw=False):
     lights_loss /= float(ind)
     shad_loss /= float(ind)
     depth_normals_loss /= float(ind)
-    depth_normals_loss = depth_normals_loss.data[0]
+    # depth_normals_loss = depth_normals_loss.data[0]
+    depth_normals_loss = depth_normals_loss.item()
     print("depth_normals_loss: ", depth_normals_loss)
 
     # pdb.set_trace()
@@ -482,13 +495,20 @@ def visualize_composer_alt(model, loader, save_path, epoch, raw=False):
         depth_pred = depth_pred.repeat(1, 3, 1, 1)
         shad_pred = shad_pred.repeat(1, 3, 1, 1)
 
-        recon_loss += criterion(recon, inp).data[0]
-        refl_loss += criterion(refl_pred, refl_targ).data[0]
-        depth_loss += criterion(depth_pred, depth_targ).data[0]
-        shape_loss += criterion(shape_pred, shape_targ).data[0]
-        lights_loss += criterion(lights_pred, lights_targ).data[0]
-        shad_loss += criterion(shad_pred, shad_targ).data[0]
-        depth_normals_loss += criterion(shape_pred, depth_normals_pred.detach()).data[0]
+        # recon_loss += criterion(recon, inp).data[0]
+        # refl_loss += criterion(refl_pred, refl_targ).data[0]
+        # depth_loss += criterion(depth_pred, depth_targ).data[0]
+        # shape_loss += criterion(shape_pred, shape_targ).data[0]
+        # lights_loss += criterion(lights_pred, lights_targ).data[0]
+        # shad_loss += criterion(shad_pred, shad_targ).data[0]
+        # depth_normals_loss += criterion(shape_pred, depth_normals_pred.detach()).data[0]
+        recon_loss += criterion(recon, inp).item()
+        refl_loss += criterion(refl_pred, refl_targ).item()
+        depth_loss += criterion(depth_pred, depth_targ).item()
+        shape_loss += criterion(shape_pred, shape_targ).item()
+        lights_loss += criterion(lights_pred, lights_targ).item()
+        shad_loss += criterion(shad_pred, shad_targ).item()
+        depth_normals_loss += criterion(shape_pred, depth_normals_pred.detach()).item()
 
         lights_rendered_targ = render.vis_lights(lights_targ, verbose=False)
         lights_rendered_pred = render.vis_lights(lights_pred, verbose=False)
