@@ -50,6 +50,7 @@ def normalize(normals):
     # magnitude = torch.pow(normals, 2).sum(1)
     # magnitude = magnitude.sqrt().repeat(1,3,1,1)
     # normed = normals / (magnitude + 1e-6)
+    print(normals.shape())
     magnitude = torch.norm(normals, p=2, dim=1)
     normed = normals.T / (magnitude + 1e-6)
     return normed.T
