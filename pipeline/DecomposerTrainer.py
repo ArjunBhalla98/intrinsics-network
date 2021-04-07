@@ -22,8 +22,11 @@ class DecomposerTrainer:
             tensors = [Variable(t.float().cuda(non_blocking=True)) for t in tensors]
             inp, mask, refl_targ, depth_targ, shape_targ, lights_targ = tensors
             self.optimizer.zero_grad()
+            # refl_pred, depth_pred, shape_pred, lights_pred = self.model.forward(
+            #     inp, mask, keepdim=True
+            # )
             refl_pred, depth_pred, shape_pred, lights_pred = self.model.forward(
-                inp, mask, keepdim=True
+                inp, mask
             )
             refl_loss = self.criterion(refl_pred, refl_targ)
             depth_loss = self.criterion(depth_pred, depth_targ)
