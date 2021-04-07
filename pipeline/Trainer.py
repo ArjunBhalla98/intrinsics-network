@@ -29,7 +29,7 @@ class Trainer:
 
             losses.update([loss.item()])
             progress.update(self.loader.batch_size)
-            progress.set_description(str(loss.data[0]))
+            progress.set_description(str(loss.item()))
         return losses.avgs
 
     def train(self):
