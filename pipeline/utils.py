@@ -59,10 +59,12 @@ def vector_to_image(vector):
     dim = vector.dim()
     ## batch
     if dim == 4:
-        mask = torch.pow(vector, 2).sum(1) > 0.01
+        # mask = torch.pow(vector, 2).sum(1) > 0.01
+        mask = torch.pow(vector, 2).sum(1, keepdim=True) > 0.01
         mask = mask.repeat(1, 3, 1, 1)
     elif dim == 3:
-        mask = torch.pow(vector, 2).sum(0) > 0.01
+        # mask = torch.pow(vector, 2).sum(0) > 0.01
+        mask = torch.pow(vector, 2).sum(0, keepdim=True) > 0.01
         mask = mask.repeat(3, 1, 1)
     else:
         raise RuntimeError
