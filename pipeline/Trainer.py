@@ -27,7 +27,7 @@ class Trainer:
             loss.backward()
             self.optimizer.step()
 
-            losses.update([loss.data[0]])
+            losses.update([loss.item()])
             progress.update(self.loader.batch_size)
             progress.set_description(str(loss.data[0]))
         return losses.avgs
