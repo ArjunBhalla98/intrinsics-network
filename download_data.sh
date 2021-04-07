@@ -5,7 +5,6 @@ else
     ## each category has ~2 GB of data
     total_size="$(($num_categories * 2))"
 
-    while true; do
 	for category in "$@"
 	do
 	    for data in "test" "val" "train"
@@ -23,5 +22,4 @@ else
 		rm ${filename}.tar.gz
 	    done
 	done
-    done
 fi
