@@ -110,12 +110,16 @@ class Decomposer(nn.Module):
         normed = normalize(clamped)
 
         ## turn float mask into bool array
+        print(mask.shape)
         mask = mask < 0.25
+        print(mask.shape)
+        # recent addition bc. of keepdims
+        mask = mask.unsqueeze(1)
         ## set background pixels to 0 so
         ## we don't count them in error
         reflectance[mask] = 0
         normed[mask] = 0
-        depth.unsqueeze(1)[mask[:, 0]] = 0
+        depth[mask[:, 0]] = 0
 
         return reflectance, depth, normed, lights
 
