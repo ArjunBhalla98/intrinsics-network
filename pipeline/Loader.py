@@ -1,6 +1,7 @@
 import os, torch, torch.utils.data, imageio, numpy as np, pdb
 import imageio
 from .utils import *
+from PIL import Image
 
 """
 directory : base path of datasets 
@@ -134,8 +135,13 @@ class IntrinsicDataset(torch.utils.data.Dataset):
 
     ## read image as C x M x N array in range [0, 1]
     def __read_image(self, path):
-        img = np.asarray(imageio.imread(path + ".png"))
+        try:
+            img = Image.open(path)
+            img.verify()
+        except:
+            print(f"Bad file: {path}")
         # img = np.asarray(imageio.imread(path))
+
         if img.shape[-1] == 4:
             img = img[:, :, :-1]
         img = img.transpose(2, 0, 1) / 255.0
