@@ -140,8 +140,7 @@ class IntrinsicDataset(torch.utils.data.Dataset):
             img.verify()
         except:
             print(f"Bad file: {path}")
-        # img = np.asarray(imageio.imread(path))
-        img = np.asarray(img)
+        img = np.asarray(imageio.imread(path))
         if img.shape[-1] == 4:
             img = img[:, :, :-1]
         img = img.transpose(2, 0, 1) / 255.0
