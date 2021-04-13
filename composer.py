@@ -3,7 +3,8 @@
 import sys, os, argparse, torch, pdb
 
 sys.path.append("/om/user/janner/mit/urop/intrinsic/pytorch/")
-import models, pipeline, style
+import models, pipeline
+# , style
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -140,7 +141,7 @@ train_set = pipeline.ComposerDataset(
 )
 train_loader = torch.utils.data.DataLoader(
     train_set,
-    batch_size=args.batch_size / 2,
+    batch_size=args.batch_size // 2,
     num_workers=args.loader_threads,
     shuffle=True,
 )
@@ -186,7 +187,7 @@ for epoch in range(args.num_epochs):
 
     if args.save_model:
         state = model.state_dict()
-        torch.save(state, open(os.path.join(args.save_path, "state.t7"), "w"))
+        torch.save(state, open(os.path.join(args.save_path, "state.t7"), "wb"))
 
     ## visualize intrinisc image predictions and reconstructions of the val set
     val_losses = pipeline.visualize_composer(model, val_loader, args.save_path, epoch)

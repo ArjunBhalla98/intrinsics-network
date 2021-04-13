@@ -64,6 +64,7 @@ class IntrinsicDataset(torch.utils.data.Dataset):
                     files["shading"] = self.__find_sort_files(dataset, "shading")[
                         :size_per_dataset
                     ]
+                    print(len(files["reflectance"]), len(files["shading"]), size_per_dataset)
                     assert (
                         len(files["reflectance"]) == size_per_dataset
                         and len(files["shading"]) == size_per_dataset

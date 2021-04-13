@@ -226,11 +226,14 @@ def visualize_decomposer_full(model, loader, save_path):
         shape_targ = pipeline.vector_to_image(shape_targ)
         shape_pred = pipeline.vector_to_image(shape_pred)
 
-        lights_rendered_targ = render.vis_lights(lights_targ, verbose=False)
-        lights_rendered_pred = render.vis_lights(lights_pred, verbose=False)
+        # lights_rendered_targ = render.vis_lights(lights_targ, verbose=False)
+        # lights_rendered_pred = render.vis_lights(lights_pred, verbose=False)
+        lights_rendered_targ = shape_targ
+        lights_rendered_pred = shape_pred
 
         depth_targ = depth_targ.unsqueeze(1).repeat(1, 3, 1, 1)
         depth_pred = depth_pred.repeat(1, 3, 1, 1)
+        
 
         # pdb.set_trace()
         splits = []
@@ -344,8 +347,6 @@ def visualize_composer(model, loader, save_path, epoch, raw=False):
             :, 1
         ].sum()  ##criterion(shape_pred, depth_normals_pred.detach()).data[0]
 
-        lights_rendered_targ = render.vis_lights(lights_targ, verbose=False)
-        lights_rendered_pred = render.vis_lights(lights_pred, verbose=False)
         # pdb.set_trace()
 
         shape_targ = pipeline.vector_to_image(shape_targ)
@@ -353,6 +354,10 @@ def visualize_composer(model, loader, save_path, epoch, raw=False):
 
         depth_normals_targ = pipeline.vector_to_image(depth_normals_targ)
         depth_normals_pred = pipeline.vector_to_image(depth_normals_pred)
+        # lights_rendered_targ = render.vis_lights(lights_targ, verbose=False)
+        # lights_rendered_pred = render.vis_lights(lights_pred, verbose=False)
+        lights_rendered_targ = depth_normals_targ
+        lights_rendered_pred = depth_normals_pred
 
         splits = []
         # pdb.set_trace()

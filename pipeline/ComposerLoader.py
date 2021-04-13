@@ -64,7 +64,7 @@ class ComposerDataset(torch.utils.data.Dataset):
             self.set_specific = []
             for sel in selections:
                 if sel == "lights":
-                    files = np.load("../dataset/arrays/" + array + ".npy")[
+                    files = np.load("/home/ab2383/intrinsics-network/dataset/arrays/" + array + ".npy")[
                         :size_per_dataset, :
                     ]
                     assert files.shape[0] == size_per_dataset
@@ -77,6 +77,7 @@ class ComposerDataset(torch.utils.data.Dataset):
                     files["shading"] = self.__find_sort_files(dataset, "shading")[
                         :size_per_dataset
                     ]
+                    print(len(files["reflectance"]), len(files["shading"]), size_per_dataset)
                     assert (
                         len(files["reflectance"]) == size_per_dataset
                         and len(files["shading"]) == size_per_dataset
