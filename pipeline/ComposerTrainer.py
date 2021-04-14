@@ -150,7 +150,7 @@ class ComposerTrainer:
             self.optimizer.step()
 
             loss_data = [
-                l.data[0]
+                l.item()
                 for l in [
                     un_loss,
                     refl_loss,

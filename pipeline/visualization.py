@@ -422,14 +422,15 @@ def visualize_composer(model, loader, save_path, epoch, raw=False):
 
     if raw:
         save_raw(images, masks, labels, raw_path)
-
-    recon_loss /= float(ind)
-    refl_loss /= float(ind)
-    depth_loss /= float(ind)
-    shape_loss /= float(ind)
-    lights_loss /= float(ind)
-    shad_loss /= float(ind)
-    depth_normals_loss /= float(ind)
+    ## added 2021 by me, although honestly wtf are they doing here
+    idx = ind + 1
+    recon_loss /= float(idx)
+    refl_loss /= float(idx)
+    depth_loss /= float(idx)
+    shape_loss /= float(idx)
+    lights_loss /= float(idx)
+    shad_loss /= float(idx)
+    depth_normals_loss /= float(idx)
     # depth_normals_loss = depth_normals_loss.data[0]
     depth_normals_loss = depth_normals_loss.item()
     print("depth_normals_loss: ", depth_normals_loss)

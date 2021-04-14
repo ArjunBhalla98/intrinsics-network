@@ -196,4 +196,4 @@ for epoch in range(args.num_epochs):
     train_losses = trainer.train()
 
     ## save plots of the errors
-    logger.update(train_losses, val_losses)
+    # logger.update(train_losses, val_losses)

@@ -9,6 +9,7 @@ class Logger:
         self.data = [ [[],[]] for i in range(len(labels)) ]
 
     def update(self, train, val):
+        print(len(train), len(self.labels))
         assert len(train) == len(self.labels)
         for ind in range(len(train)):
             self.data[ind][0].append(train[ind])

@@ -143,7 +143,7 @@ class ComposerDataset(torch.utils.data.Dataset):
     ## read image as C x M x N array in range [0, 1]
     def __read_image(self, path):
         img = imageio.imread(path)[:, :, :-1].transpose(2, 0, 1) / 255.0
-        return img
+        return torch.tensor(img)
 
     def __read_data_files(self, data_files, selections, idx):
         outputs = []

@@ -1,4 +1,5 @@
 import sys, torch, torch.nn as nn, torch.nn.functional as F
+# from Shader import Shader
 from torch.autograd import Variable
 from .primitives import *
 
@@ -123,10 +124,37 @@ class Decomposer(nn.Module):
 
 
 if __name__ == "__main__":
-    inp = Variable(torch.randn(5, 3, 256, 256))
-    mask = Variable(torch.randn(5, 3, 256, 256))
+    from PIL import Image 
+    import imageio
+    import torchvision.transforms
+    # inp = Variable(torch.randn(5, 3, 256, 256))
+    transform = torchvision.transforms.Compose([torchvision.transforms.Resize([256, 256]), torchvision.transforms.ToTensor()])
+    inp = Variable(transform(Image.open("/phoenix/S3/ab2383/data/train_imgs/00277_0005.png")).unsqueeze(0).type('torch.FloatTensor'))
+    mask = Variable(transform(Image.open("/phoenix/S3/ab2383/data/TikTok_dataset/00277/masks/0005.png")).expand(3, 256, 256).unsqueeze(0).type('torch.FloatTensor'))
+    # mask = Variable(torch.randn(1, 3, 256, 256))
     # lights = Variable(torch.randn(5,4))
     decomposer = Decomposer()
+    decomposer.load_state_dict(torch.load("saved/decomposer/state.t7"))
+    shader = Shader()
+    shader.load_state_dict(torch.load("saved/shader/state.pth"))
     out = decomposer.forward(inp, mask)
-    print(decomposer)
+
+    output_labels = ["reflectance", "depth", "normals", "lights"]
+    outputs = []
+
+    for i, img in enumerate(out):
+        if i != 3:
+            image = img.cpu().detach().numpy().reshape(img.shape[1], 256, 256).transpose(1,2,0).clip(0, 1)
+            imageio.imsave(output_labels[i]+'.png', image)
+        else:
+            image = img
+        outputs.append(image)
+
+    shading = shader(out[2], out[3])
+    shading_rep = shading.repeat(1, 3, 1, 1)
+    print(shading_rep.size(), out[0].size()) 
+    imageio.imsave("shading.png", shading_rep.squeeze().detach().numpy().transpose(1,2,0).clip(0, 1))
+    recons = out[0] * shading_rep
+    imageio.imsave("reconstructed.png", recons.squeeze().detach().numpy().transpose(1,2,0).clip(0,1))
+
     print([i.size() for i in out])
