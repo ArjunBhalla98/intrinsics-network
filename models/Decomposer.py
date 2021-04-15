@@ -164,9 +164,9 @@ if __name__ == "__main__":
             ]
         )
         inp = Variable(transform(img).type("torch.FloatTensor"))
-        inp = (inp[:, :, :3] * inp[:, :, 3].unsqueeze(-1)).unsqueeze(0)
+        inp = (inp[:3, :, :] * inp[3, :, :]).unsqueeze(0)
         mask = Variable(transform(mask).type("torch.FloatTensor"))
-        mask = (mask[:, :, :3] * mask[:, :, 3].unsqueeze(-1)).unsqueeze(0)
+        mask = (mask[:3, :, :] * mask[3, :, :]).unsqueeze(0)
     print(inp.size())
     print(mask.size())
 
