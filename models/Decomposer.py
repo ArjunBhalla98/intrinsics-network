@@ -131,10 +131,10 @@ if __name__ == "__main__":
     # img = Image.open("/phoenix/S3/ab2383/data/train_imgs/00277_0005.png")
     # mask = Image.open("/phoenix/S3/ab2383/data/TikTok_dataset/00277/masks/0005.png")
     img = Image.open(
-        "/home/ab2383/intrinsics-network/dataset/output/motorbike_test/18_composite.png"
+        "/home/ab2383/intrinsics-network/dataset/output/motorbike_test/2_composite.png"
     )
     mask = Image.open(
-        "/home/ab2383/intrinsics-network/dataset/output/motorbike_test/18_mask.png"
+        "/home/ab2383/intrinsics-network/dataset/output/motorbike_test/2_mask.png"
     )
     w, h = img.size  # why is this wxh??
     if w != h:
