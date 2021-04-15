@@ -1,7 +1,7 @@
 import sys, torch, torch.nn as nn, torch.nn.functional as F
-# from Shader import Shader
+from Shader import Shader
 from torch.autograd import Variable
-from .primitives import *
+from primitives import *
 
 """
 Predicts reflectance, shape, and lighting conditions given an image
@@ -124,15 +124,32 @@ class Decomposer(nn.Module):
 
 
 if __name__ == "__main__":
-    from PIL import Image 
+    from PIL import Image, ImageOps
     import imageio
     import torchvision.transforms
-    # inp = Variable(torch.randn(5, 3, 256, 256))
-    transform = torchvision.transforms.Compose([torchvision.transforms.Resize([256, 256]), torchvision.transforms.ToTensor()])
-    inp = Variable(transform(Image.open("/phoenix/S3/ab2383/data/train_imgs/00277_0005.png")).unsqueeze(0).type('torch.FloatTensor'))
-    mask = Variable(transform(Image.open("/phoenix/S3/ab2383/data/TikTok_dataset/00277/masks/0005.png")).expand(3, 256, 256).unsqueeze(0).type('torch.FloatTensor'))
-    # mask = Variable(torch.randn(1, 3, 256, 256))
-    # lights = Variable(torch.randn(5,4))
+    # img = Image.open("/phoenix/S3/ab2383/data/train_imgs/00277_0005.png")
+    # mask = Image.open("/phoenix/S3/ab2383/data/TikTok_dataset/00277/masks/0005.png")
+    img = Image.open("/home/ab2383/intrinsics-network/dataset/output/motorbike_test/1360_composite.png")
+    mask = Image.open("/home/ab2383/intrinsics-network/dataset/output/motorbike_test/1360_mask.png")
+    w, h = img.size # why is this wxh??
+    if w != h:
+        new_size = max(w, h)
+        side_padding = (h-w) // 2
+        padding = (side_padding, 0, side_padding, 0)
+        img = ImageOps.expand(img, padding)
+        mask = ImageOps.expand(mask, padding)
+    print(img.size)
+
+        transform = torchvision.transforms.Compose([torchvision.transforms.Resize([256, 256]), torchvision.transforms.ToTensor()])
+        inp = Variable(transform(img).unsqueeze(0).type('torch.FloatTensor'))
+       
+        mask = Variable(transform(mask).expand(3, 256, 256).unsqueeze(0).type('torch.FloatTensor'))
+    else:
+        inp = Variable(transform(img).type('torch.FloatTensor'))
+        mask = Variable(transform(mask).type('torch.FloatTensor'))
+    print(inp.size())
+    print(mask.size())
+
     decomposer = Decomposer()
     decomposer.load_state_dict(torch.load("saved/decomposer/state.t7"))
     shader = Shader()
