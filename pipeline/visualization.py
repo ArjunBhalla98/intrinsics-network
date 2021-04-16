@@ -128,7 +128,7 @@ def visualize_decomposer(model, loader, save_path, epoch, save_raw=False):
     # refl_targets = []
     # shape_targets = []
 
-    criterion = nn.MSELoss(size_average=True).cuda()
+    criterion = nn.MSELoss(size_average=True).cuda(1)
     refl_loss = 0
     shape_loss = 0
     lights_loss = 0
@@ -136,7 +136,7 @@ def visualize_decomposer(model, loader, save_path, epoch, save_raw=False):
     images = []
 
     for ind, tensors in enumerate(loader):
-        tensors = [Variable(t.float().cuda(non_blocking=True)) for t in tensors]
+        tensors = [Variable(t.float().cuda(1, non_blocking=True)) for t in tensors]
         inp, mask, refl_targ, depth_targ, shape_targ, lights_targ = tensors
 
         refl_pred, depth_pred, shape_pred, lights_pred = model.forward(inp, mask)
@@ -200,7 +200,7 @@ def visualize_decomposer_full(model, loader, save_path):
     # refl_targets = []
     # shape_targets = []
 
-    criterion = nn.MSELoss(size_average=True).cuda()
+    criterion = nn.MSELoss(size_average=True).cuda(1)
     refl_loss = 0
     shape_loss = 0
     lights_loss = 0
@@ -209,7 +209,7 @@ def visualize_decomposer_full(model, loader, save_path):
     masks = []
 
     for ind, tensors in enumerate(loader):
-        tensors = [Variable(t.float().cuda(non_blocking=True)) for t in tensors]
+        tensors = [Variable(t.float().cuda(1, non_blocking=True)) for t in tensors]
         inp, mask, refl_targ, depth_targ, shape_targ, lights_targ = tensors
 
         refl_pred, depth_pred, shape_pred, lights_pred = model.forward(inp, mask)
@@ -233,7 +233,6 @@ def visualize_decomposer_full(model, loader, save_path):
 
         depth_targ = depth_targ.unsqueeze(1).repeat(1, 3, 1, 1)
         depth_pred = depth_pred.repeat(1, 3, 1, 1)
-        
 
         # pdb.set_trace()
         splits = []

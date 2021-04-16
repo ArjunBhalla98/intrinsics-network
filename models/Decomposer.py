@@ -1,7 +1,8 @@
 import sys, torch, torch.nn as nn, torch.nn.functional as F
-from Shader import Shader
+
+# from Shader import Shader
 from torch.autograd import Variable
-from primitives import *
+from .primitives import *
 
 """
 Predicts reflectance, shape, and lighting conditions given an image

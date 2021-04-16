@@ -9,7 +9,7 @@ class DecomposerTrainer:
     def __init__(self, model, loader, lr, lights_mult):
         self.model = model
         self.loader = loader
-        self.criterion = nn.MSELoss(size_average=True).cuda()
+        self.criterion = nn.MSELoss(size_average=True).cuda(1)
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
         self.lights_mult = lights_mult
 
@@ -19,7 +19,7 @@ class DecomposerTrainer:
         progress = tqdm(total=len(self.loader.dataset))
 
         for ind, tensors in enumerate(self.loader):
-            tensors = [Variable(t.float().cuda(non_blocking=True)) for t in tensors]
+            tensors = [Variable(t.float().cuda(1, non_blocking=True)) for t in tensors]
             inp, mask, refl_targ, depth_targ, shape_targ, lights_targ = tensors
             self.optimizer.zero_grad()
             # refl_pred, depth_pred, shape_pred, lights_pred = self.model.forward(

@@ -1,6 +1,6 @@
 import torch, torch.nn as nn, torch.nn.functional as F
 from torch.autograd import Variable
-from primitives import *
+from .primitives import *
 import sys
 
 """
