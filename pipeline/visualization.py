@@ -76,7 +76,7 @@ def visualize_relit_shader(model, loader, save_path, params, save_raw=False):
         for param in params:
             # pdb.set_trace()
             lights = Variable(torch.Tensor(param).cuda().repeat(num_lights, 1))
-            print(normals.size(), lights.size())
+            # print(normals.size(), lights.size())
             # pdb.set_trace()
             pred = model.forward(normals, lights).data
 

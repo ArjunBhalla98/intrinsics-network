@@ -112,7 +112,7 @@ class Decomposer(nn.Module):
         normed = normalize(clamped)
 
         ## turn float mask into bool array
-        print(mask.shape)
+        # print(mask.shape)
         mask = mask < 0.25
         ## set background pixels to 0 so
         ## we don't count them in error
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         padding = (side_padding, 0, side_padding, 0)
         img = ImageOps.expand(img, padding)
         mask = ImageOps.expand(mask, padding)
-        print(img.size)
+        # print(img.size)
 
         transform = torchvision.transforms.Compose(
             [
@@ -165,12 +165,12 @@ if __name__ == "__main__":
             ]
         )
         inp = Variable(transform(img).type("torch.FloatTensor"))
-        print(inp.size())
+        # print(inp.size())
         inp = (inp[:3, :, :] * inp[3, :, :]).unsqueeze(0)
         mask = Variable(transform(mask).type("torch.FloatTensor"))
         mask = (mask[:3, :, :] * mask[3, :, :]).unsqueeze(0)
-    print(inp.size())
-    print(mask.size())
+    # print(inp.size())
+    # print(mask.size())
 
     decomposer = Decomposer()
     decomposer.load_state_dict(torch.load("saved/decomposer/state.t7"))
@@ -198,7 +198,7 @@ if __name__ == "__main__":
 
     shading = shader(out[2], out[3])
     shading_rep = shading.repeat(1, 3, 1, 1)
-    print(shading_rep.size(), out[0].size())
+    # print(shading_rep.size(), out[0].size())
     imageio.imsave(
         "shading.png",
         shading_rep.squeeze().detach().numpy().transpose(1, 2, 0).clip(0, 1),
