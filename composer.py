@@ -4,6 +4,7 @@ import sys, os, argparse, torch, pdb
 
 sys.path.append("/om/user/janner/mit/urop/intrinsic/pytorch/")
 import models, pipeline
+
 # , style
 
 parser = argparse.ArgumentParser()
@@ -153,7 +154,7 @@ val_set = pipeline.IntrinsicDataset(
     args.val_intrinsics,
     inds=range(0, args.num_val * args.val_offset, args.val_offset),
     array=args.unlabeled_array,
-    size_per_dataset=args.set_size,
+    size_per_dataset=args.val_size,
 )
 val_loader = torch.utils.data.DataLoader(
     val_set, batch_size=args.batch_size, num_workers=args.loader_threads, shuffle=False
