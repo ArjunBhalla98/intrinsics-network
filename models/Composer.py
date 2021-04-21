@@ -1,4 +1,6 @@
 import sys, torch, torch.nn as nn, torch.nn.functional as F, pdb
+from Decomposer import Decomposer
+from Shader import Shader
 from torch.autograd import Variable
 from primitives import *
 
