@@ -91,6 +91,7 @@ if __name__ == "__main__":
     # shader.load_state_dict(torch.load("saved/shader/state.pth"))
     composer_path = "/home/ab2383/intrinsics-network/saved/composer/state.t7"
     composer = Composer(decomposer, shader)
+    composer = composer.cuda()
     composer.load_state_dict(torch.load(composer_path))
     print(composer)
     # pdb.set_trace()
