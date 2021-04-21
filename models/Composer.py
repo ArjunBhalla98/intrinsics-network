@@ -78,11 +78,13 @@ if __name__ == "__main__":
     # print(inp.size())
     # print(mask.size())
 
-    decomposer_path = "../logs/separated_decomp_0.01lr_0.1lights/model.t7"
-    shader_path = "../logs/separated_shader_0.01/model.t7"
-    decomposer = torch.load(decomposer_path)
-    shader = torch.load(shader_path)
-    composer = Composer(decomposer, shader).cuda()
+    # decomposer_path = "../logs/separated_decomp_0.01lr_0.1lights/model.t7"
+    # shader_path = "../logs/separated_shader_0.01/model.t7"
+    # decomposer = torch.load(decomposer_path)
+    # shader = torch.load(shader_path)
+    # composer = Composer(decomposer, shader).cuda()
+    composer_path = "../saved/composer/state.t7"
+    composer = torch.load()
     print(composer)
     # pdb.set_trace()
     # inp = Variable(torch.randn(5, 3, 256, 256).cuda())
