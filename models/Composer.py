@@ -84,7 +84,7 @@ if __name__ == "__main__":
     # shader = torch.load(shader_path)
     # composer = Composer(decomposer, shader).cuda()
     composer_path = "../saved/composer/state.t7"
-    composer = torch.load()
+    composer = torch.load(composer_path)
     print(composer)
     # pdb.set_trace()
     # inp = Variable(torch.randn(5, 3, 256, 256).cuda())
