@@ -87,7 +87,7 @@ if __name__ == "__main__":
                 out_recons.cpu()
                 .detach()
                 .numpy()
-                .reshape(img.shape[1], 256, 256)
+                .reshape(out_recons.shape[1], 256, 256)
                 .transpose(1, 2, 0)
                 .clip(0, 1)
             )
