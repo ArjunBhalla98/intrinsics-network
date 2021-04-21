@@ -91,7 +91,7 @@ if __name__ == "__main__":
                 .transpose(1, 2, 0)
                 .clip(0, 1)
             )
-            imageio.imsave(save_path + f"/{folder}/{img}")
+            imageio.imsave(save_path + f"/{folder}/{img}", image)
         print(f"Finished folder {folder}")
 
     # out = composer.forward(inp, mask)
