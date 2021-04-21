@@ -99,6 +99,23 @@ if __name__ == "__main__":
     # mask = Variable(torch.randn(5, 3, 256, 256).cuda())
 
     out = composer.forward(inp, mask)
+    output_labels = ["reflectance", "depth", "normals", "lights"]
+    outputs = []
+
+    for i, img in enumerate(out):
+        if i != 4:  # lights
+            image = (
+                img.cpu()
+                .detach()
+                .numpy()
+                .reshape(img.shape[1], 256, 256)
+                .transpose(1, 2, 0)
+                .clip(0, 1)
+            )
+            imageio.imsave(str(i) + ".png", image)
+        else:
+            image = img
+        outputs.append(image)
 
     print([i.size() for i in out])
     imageio.imsave(
