@@ -22,7 +22,7 @@ class Composer(nn.Module):
         return reconstruction, reflectance, depth, shape, lights, shading
 
 
-def process_inp(img, mask):
+def process_img(img, mask):
     w, h = img.size  # why is this wxh??
     if w != h:
         new_size = max(w, h)
@@ -59,62 +59,8 @@ if __name__ == "__main__":
     from PIL import Image, ImageOps
     import imageio
     import torchvision.transforms
+    import os
 
-    # img = Image.open("/phoenix/S3/ab2383/data/train_imgs/00277_0005.png")
-    # mask = Image.open("/phoenix/S3/ab2383/data/TikTok_dataset/00277/masks/0005.png")
-    folders = ["277", "339", "267"]
-
-    img = Image.open(
-        "/home/ab2383/intrinsics-network/dataset/output/motorbike_test/2_composite.png"
-    )
-    mask = Image.open(
-        "/home/ab2383/intrinsics-network/dataset/output/motorbike_test/2_mask.png"
-    )
-    w, h = img.size  # why is this wxh??
-    if w != h:
-        new_size = max(w, h)
-        side_padding = (h - w) // 2
-        padding = (side_padding, 0, side_padding, 0)
-        img = ImageOps.expand(img, padding)
-        mask = ImageOps.expand(mask, padding)
-        # print(img.size)
-
-        transform = torchvision.transforms.Compose(
-            [
-                torchvision.transforms.Resize([256, 256]),
-                torchvision.transforms.ToTensor(),
-            ]
-        )
-        inp = Variable(transform(img).unsqueeze(0).type("torch.FloatTensor"))
-
-        mask = Variable(
-            transform(mask).expand(3, 256, 256).unsqueeze(0).type("torch.FloatTensor")
-        )
-
-        inp = inp.cuda()
-        mask = mask.cuda()
-    else:
-        transform = torchvision.transforms.Compose(
-            [
-                torchvision.transforms.Resize([256, 256]),
-                torchvision.transforms.ToTensor(),
-            ]
-        )
-        inp = Variable(transform(img).type("torch.FloatTensor"))
-        # print(inp.size())
-        inp = (inp[:3, :, :] * inp[3, :, :]).unsqueeze(0)
-        mask = Variable(transform(mask).type("torch.FloatTensor"))
-        mask = (mask[:3, :, :] * mask[3, :, :]).unsqueeze(0)
-        inp = inp.cuda()
-        mask = mask.cuda()
-    # print(inp.size())
-    # print(mask.size())
-
-    # decomposer_path = "../logs/separated_decomp_0.01lr_0.1lights/model.t7"
-    # shader_path = "../logs/separated_shader_0.01/model.t7"
-    # decomposer = torch.load(decomposer_path)
-    # shader = torch.load(shader_path)
-    # composer = Composer(decomposer, shader).cuda()
     decomposer = Decomposer()
     decomposer.load_state_dict(torch.load("saved/decomposer/state.t7"))
     shader = Shader()
@@ -122,32 +68,52 @@ if __name__ == "__main__":
     composer_path = "/home/ab2383/intrinsics-network/saved/composer/state.t7"
     composer = Composer(decomposer, shader)
     composer = composer.cuda()
-    # composer.load_state_dict(torch.load(composer_path))
-    print(composer)
-    # pdb.set_trace()
-    # inp = Variable(torch.randn(5, 3, 256, 256).cuda())
-    # mask = Variable(torch.randn(5, 3, 256, 256).cuda())
+    composer.load_state_dict(torch.load(composer_path))
+    print("Composer Built")
 
-    out = composer.forward(inp, mask)
-    output_labels = ["reflectance", "depth", "normals", "lights"]
-    outputs = []
+    folders = ["00277", "00339", "00267"]
+    base_path = "/phoenix/S3/ab2383/data/TikTok_dataset/"
+    save_path = "/home/ab2383/intrinsics-network/"
 
-    for i, img in enumerate(out):
-        if i != 4:  # lights
+    for folder in folders:
+        imgs_path = base_path + folder + "/images/"
+        masks_path = base_path + folder + "/masks/"
+        for img in os.listdir(imgs_path):
+            inp, mask = process_img(
+                Image.open(imgs_path + img), Image.open(masks_path + img)
+            )
+            out_recons = composer.forward(inp, mask)[0]
             image = (
-                img.cpu()
+                out_recons.cpu()
                 .detach()
                 .numpy()
                 .reshape(img.shape[1], 256, 256)
                 .transpose(1, 2, 0)
                 .clip(0, 1)
             )
-            imageio.imsave(str(i) + ".png", image)
-        else:
-            image = img
-        outputs.append(image)
+            imageio.imsave(save_path + f"/{folder}/{img}")
 
-    print([i.size() for i in out])
+    # out = composer.forward(inp, mask)
+    # output_labels = ["reflectance", "depth", "normals", "lights"]
+    # outputs = []
+
+    # for i, img in enumerate(out):
+    #     if i != 4:  # lights
+    #         image = (
+    #             img.cpu()
+    #             .detach()
+    #             .numpy()
+    #             .reshape(img.shape[1], 256, 256)
+    #             .transpose(1, 2, 0)
+    #             .clip(0, 1)
+    #         )
+    #         imageio.imsave(str(i) + ".png", image)
+    #     else:
+    #         image = img
+    #     outputs.append(image)
+
+    # print([i.size() for i in out])
+    print("Process Complete")
     # imageio.imsave(
     #     "recons_composer.png",
     #     out.squeeze().detach().numpy().transpose(1, 2, 0).clip(0, 1),
