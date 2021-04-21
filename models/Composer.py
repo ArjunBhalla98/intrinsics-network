@@ -122,7 +122,7 @@ if __name__ == "__main__":
     composer_path = "/home/ab2383/intrinsics-network/saved/composer/state.t7"
     composer = Composer(decomposer, shader)
     composer = composer.cuda()
-    composer.load_state_dict(torch.load(composer_path))
+    # composer.load_state_dict(torch.load(composer_path))
     print(composer)
     # pdb.set_trace()
     # inp = Variable(torch.randn(5, 3, 256, 256).cuda())
