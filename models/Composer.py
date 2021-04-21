@@ -1,6 +1,6 @@
 import sys, torch, torch.nn as nn, torch.nn.functional as F, pdb
 from torch.autograd import Variable
-from .primitives import *
+from primitives import *
 
 
 class Composer(nn.Module):
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     import sys
 
     sys.path.append("../")
-    import models
+    # import models
 
     from PIL import Image, ImageOps
     import imageio
