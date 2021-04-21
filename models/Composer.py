@@ -22,6 +22,34 @@ class Composer(nn.Module):
         return reconstruction, reflectance, depth, shape, lights, shading
 
 
+def process_inp(img, mask):
+    w, h = img.size  # why is this wxh??
+    if w != h:
+        new_size = max(w, h)
+        side_padding = (h - w) // 2
+        padding = (side_padding, 0, side_padding, 0)
+        img = ImageOps.expand(img, padding)
+        mask = ImageOps.expand(mask, padding)
+        # print(img.size)
+
+        transform = torchvision.transforms.Compose(
+            [
+                torchvision.transforms.Resize([256, 256]),
+                torchvision.transforms.ToTensor(),
+            ]
+        )
+        inp = Variable(transform(img).unsqueeze(0).type("torch.FloatTensor"))
+
+        mask = Variable(
+            transform(mask).expand(3, 256, 256).unsqueeze(0).type("torch.FloatTensor")
+        )
+
+        inp = inp.cuda()
+        mask = mask.cuda()
+
+    return inp, mask
+
+
 if __name__ == "__main__":
     import sys
 
@@ -34,6 +62,8 @@ if __name__ == "__main__":
 
     # img = Image.open("/phoenix/S3/ab2383/data/train_imgs/00277_0005.png")
     # mask = Image.open("/phoenix/S3/ab2383/data/TikTok_dataset/00277/masks/0005.png")
+    folders = ["277", "339", "267"]
+
     img = Image.open(
         "/home/ab2383/intrinsics-network/dataset/output/motorbike_test/2_composite.png"
     )
@@ -86,9 +116,9 @@ if __name__ == "__main__":
     # shader = torch.load(shader_path)
     # composer = Composer(decomposer, shader).cuda()
     decomposer = Decomposer()
-    # decomposer.load_state_dict(torch.load("saved/decomposer/state.t7"))
+    decomposer.load_state_dict(torch.load("saved/decomposer/state.t7"))
     shader = Shader()
-    # shader.load_state_dict(torch.load("saved/shader/state.pth"))
+    shader.load_state_dict(torch.load("saved/shader/state.pth"))
     composer_path = "/home/ab2383/intrinsics-network/saved/composer/state.t7"
     composer = Composer(decomposer, shader)
     composer = composer.cuda()
@@ -118,9 +148,9 @@ if __name__ == "__main__":
         outputs.append(image)
 
     print([i.size() for i in out])
-    imageio.imsave(
-        "recons_composer.png",
-        out.squeeze().detach().numpy().transpose(1, 2, 0).clip(0, 1),
-    )
+    # imageio.imsave(
+    #     "recons_composer.png",
+    #     out.squeeze().detach().numpy().transpose(1, 2, 0).clip(0, 1),
+    # )
 
     # pdb.set_trace()
