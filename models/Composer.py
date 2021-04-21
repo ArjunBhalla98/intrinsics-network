@@ -92,6 +92,7 @@ if __name__ == "__main__":
                 .clip(0, 1)
             )
             imageio.imsave(save_path + f"/{folder}/{img}")
+        print(f"Finished folder {folder}")
 
     # out = composer.forward(inp, mask)
     # output_labels = ["reflectance", "depth", "normals", "lights"]
