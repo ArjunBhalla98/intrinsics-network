@@ -46,6 +46,21 @@ def process_img(img, mask):
 
         inp = inp.cuda()
         mask = mask.cuda()
+    else:
+        transform = torchvision.transforms.Compose(
+            [
+                torchvision.transforms.Resize([256, 256]),
+                torchvision.transforms.ToTensor(),
+            ]
+        )
+        inp = Variable(transform(img).type("torch.FloatTensor"))
+        # print(inp.size())
+        inp = (inp[:3, :, :] * inp[3, :, :]).unsqueeze(0)
+        mask = Variable(transform(mask).type("torch.FloatTensor"))
+        mask = (mask[:3, :, :] * mask[3, :, :]).unsqueeze(0)
+
+        inp = inp.cuda()
+        mask = mask.cuda()
 
     return inp, mask
 
@@ -71,28 +86,29 @@ if __name__ == "__main__":
     composer.load_state_dict(torch.load(composer_path))
     print("Composer Built")
 
-    folders = ["00277", "00339", "00267"]
-    base_path = "/phoenix/S3/ab2383/data/TikTok_dataset/"
+    # folders = ["00277", "00339", "00267"]
+    # base_path = "/phoenix/S3/ab2383/data/TikTok_dataset/"
     save_path = "/home/ab2383/intrinsics-network/"
 
-    for folder in folders:
-        imgs_path = base_path + folder + "/images/"
-        masks_path = base_path + folder + "/masks/"
-        for img in os.listdir(imgs_path):
-            inp, mask = process_img(
-                Image.open(imgs_path + img), Image.open(masks_path + img)
-            )
-            out_recons = composer.forward(inp, mask)[0]
-            image = (
-                out_recons.cpu()
-                .detach()
-                .numpy()
-                .reshape(out_recons.shape[1], 256, 256)
-                .transpose(1, 2, 0)
-                .clip(0, 1)
-            )
-            imageio.imsave(save_path + f"/{folder}/{img}", image)
-        print(f"Finished folder {folder}")
+    # for folder in folders:
+    #     imgs_path = base_path + folder + "/images/"
+    #     masks_path = base_path + folder + "/masks/"
+    #     for img in os.listdir(imgs_path):
+    base_path = "/home/ab2383/intrinsics-network/dataset/output/motorbike_train/"
+
+    inp, mask = process_img(
+        Image.open(base_path + "3_composite.png"), Image.open(base_path + "3_mask.png")
+    )
+    out_recons = composer.forward(inp, mask)[0]
+    image = (
+        out_recons.cpu()
+        .detach()
+        .numpy()
+        .reshape(out_recons.shape[1], 256, 256)
+        .transpose(1, 2, 0)
+        .clip(0, 1)
+    )
+    imageio.imsave(save_path + "train_img.png", image)
 
     # out = composer.forward(inp, mask)
     # output_labels = ["reflectance", "depth", "normals", "lights"]
